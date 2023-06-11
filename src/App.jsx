@@ -5,6 +5,8 @@ import CannonDebugger from 'cannon-es-debugger';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 import SceneInit from './lib/SceneInit';
 
+// I just changed this.
+
 function App() {
   useEffect(() => {
     const test = new SceneInit('myThreeJsCanvas');
