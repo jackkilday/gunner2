@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
 export default class SceneInit {
@@ -36,60 +35,57 @@ export default class SceneInit {
     this.camera.position.z = 50;
     this.camera.position.y = 8;
 
-    // NOTE: Specify a canvas which is already created in the HTML.
     const canvas = document.getElementById(this.canvasId);
     this.renderer = new THREE.WebGLRenderer({
       canvas,
-      // NOTE: Anti-aliasing smooths out the edges.
       antialias: true,
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    // this.renderer.shadowMap.enabled = true;
     document.body.appendChild(this.renderer.domElement);
 
     this.clock = new THREE.Clock();
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.stats = Stats();
     document.body.appendChild(this.stats.dom);
 
-    // ambient light which is for the whole scene
     this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    this.ambientLight.castShadow = true;
     this.scene.add(this.ambientLight);
 
-    // directional light - parallel sun rays
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    // this.directionalLight.castShadow = true;
     this.directionalLight.position.set(0, 32, 64);
+    this.directionalLight.castShadow = true; // Enable shadow casting
     this.scene.add(this.directionalLight);
 
-    // if window resizes
+    // Add a spotlight to create shadows
+    const spotLight = new THREE.SpotLight(0xffffff, 0.5);
+    spotLight.position.set(0, 50, 100);
+    spotLight.castShadow = true;
+    this.scene.add(spotLight);
+
+    // Set shadow properties for the directional light and spotlight
+    this.directionalLight.shadow.mapSize.width = 1024;
+    this.directionalLight.shadow.mapSize.height = 1024;
+    this.directionalLight.shadow.camera.near = 0.5;
+    this.directionalLight.shadow.camera.far = 500;
+    this.directionalLight.shadow.camera.left = -200;
+    this.directionalLight.shadow.camera.right = 200;
+    this.directionalLight.shadow.camera.top = 200;
+    this.directionalLight.shadow.camera.bottom = -200;
+
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+    spotLight.shadow.camera.near = 0.5;
+    spotLight.shadow.camera.far = 500;
+
     window.addEventListener('resize', () => this.onWindowResize(), false);
-
-    // NOTE: Load space background.
-    // this.loader = new THREE.TextureLoader();
-    // this.scene.background = this.loader.load('./pics/space.jpeg');
-
-    // NOTE: Declare uniforms to pass into glsl shaders.
-    // this.uniforms = {
-    //   u_time: { type: 'f', value: 1.0 },
-    //   colorB: { type: 'vec3', value: new THREE.Color(0xfff000) },
-    //   colorA: { type: 'vec3', value: new THREE.Color(0xffffff) },
-    // };
   }
 
   animate() {
-    // NOTE: Window is implied.
-    // requestAnimationFrame(this.animate.bind(this));
     window.requestAnimationFrame(this.animate.bind(this));
     this.render();
     this.stats.update();
-    this.controls.update();
   }
 
   render() {
-    // NOTE: Update uniform data on each render.
-    // this.uniforms.u_time.value += this.clock.getDelta();
     this.renderer.render(this.scene, this.camera);
   }
 
