@@ -47,16 +47,16 @@ export default class SceneInit {
     this.stats = Stats();
     document.body.appendChild(this.stats.dom);
 
-    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    this.ambientLight = new THREE.AmbientLight("white", 0.5);
     this.scene.add(this.ambientLight);
 
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    this.directionalLight = new THREE.DirectionalLight("white", 1);
     this.directionalLight.position.set(0, 32, 64);
     this.directionalLight.castShadow = true; // Enable shadow casting
     this.scene.add(this.directionalLight);
 
     // Add a spotlight to create shadows
-    const spotLight = new THREE.SpotLight(0xffffff, 0.5);
+    const spotLight = new THREE.SpotLight("white", 0.5);
     spotLight.position.set(0, 50, 100);
     spotLight.castShadow = true;
     this.scene.add(spotLight);
